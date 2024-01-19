@@ -1,0 +1,314 @@
+import pandas as pd
+df = pd.read_csv("C:\\Users\\jesse\\Downloads\\Project\\personal project\\customer churn\\CC.csv")
+df
+
+value_counts = df['Churn'].value_counts()
+value_counts
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+plt.figure(figsize = (8,6))
+sns.countplot(x = 'gender', hue = "Churn", data = df, palette = 'viridis')
+plt.title('CHURN VS GENDER')
+plt.xlabel('Gender')
+plt.ylabel('CHURN')
+plt.show()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+plt.figure(figsize = (8,6))
+sns.countplot(x = 'Contract', hue = "Churn", data = df, palette = 'viridis')
+plt.title('CONTRACT VS GENDER')
+plt.xlabel('Gender')
+plt.ylabel('CHURN')
+plt.show()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+plt.figure(figsize = (8,6))
+sns.countplot(x = 'PaymentMethod', hue = "Churn", data = df, palette = 'viridis')
+plt.title('PAYMENT VS GENDER')
+plt.xlabel('Gender')
+plt.ylabel('CHURN')
+plt.show()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='MonthlyCharges', data=df, color='skyblue')
+plt.title('Boxplot of MonthlyCharges')
+plt.show()
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='TotalCharges', data=df, color='lightcoral')
+plt.title('Boxplot of TotalCharges')
+plt.show()
+
+df = df.dropna(subset=['TotalCharges'])
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+plt.figure(figsize = (8,6))
+sns.kdeplot(data =  df['TotalCharges'], fill = True, color = 'skyblue')
+plt.title('KS PLOT FOR TOTAL CHARGES')
+plt.xlabel('Total charges')
+plt.show()
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+plt.figure(figsize = (8,6))
+sns.kdeplot(data =  df['MonthlyCharges'], fill = True, color = 'skyblue')
+plt.title('KS PLOT FOR Monthly CHARGES')
+plt.xlabel('Monthly charges')
+plt.show()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming 'df' is your DataFrame
+# Convert numeric columns to numeric, handling non-numeric values with NaN
+df[['TotalCharges', 'MonthlyCharges']] = df[['TotalCharges', 'MonthlyCharges']].apply(pd.to_numeric, errors='coerce')
+
+# Calculate the correlation matrix
+correlation_matrix = df.corr()
+
+# Create a heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+plt.title('Correlation Matrix Heatmap')
+plt.show()
+
+
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='TotalCharges', y='MonthlyCharges', data=df, alpha=0.7)
+plt.title('Scatter Plot between TotalCharges and MonthlyCharges')
+plt.xlabel('TotalCharges')
+plt.ylabel('MonthlyCharges')
+plt.show()
+
+
+import seaborn as sns
+import pandas as pd
+
+# Assuming 'df' is your DataFrame
+# Convert numeric columns to numeric, handling non-numeric values with NaN
+df[['TotalCharges', 'MonthlyCharges']] = df[['TotalCharges', 'MonthlyCharges']].apply(pd.to_numeric, errors='coerce')
+
+# Create a pair plot for all numeric columns
+sns.pairplot(df[['TotalCharges', 'MonthlyCharges']])
+plt.suptitle('Pair Plot of TotalCharges and MonthlyCharges', y=1.02)
+plt.show()
+
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# Assuming 'df' is your DataFrame with two categorical variables, for example, 'Gender' and 'Churn'
+# Create a contingency table
+contingency_table = pd.crosstab(df['gender'], df['Churn'])
+
+# Perform the chi-square test
+chi2, p, dof, expected = chi2_contingency(contingency_table)
+
+# Print the results
+print(f"Chi-Square Value: {chi2}")
+print(f"P-value: {p}")
+print(f"Degrees of Freedom: {dof}")
+print("Expected Frequencies:")
+print(expected)
+
+
+import seaborn as sns
+import pandas as pd
+
+# Assuming 'df' is your DataFrame with categorical variables, for example, 'Gender' and 'Churn'
+# Create a contingency table
+contingency_table = pd.crosstab(df['gender'], df['Churn'])
+
+# Create a matrix plot (heatmap)
+plt.figure(figsize=(8, 6))
+sns.heatmap(contingency_table, annot=True, fmt="d", cmap="Blues")
+plt.title('Matrix Plot of Gender vs. Churn')
+plt.show()
+
+import pandas as pd
+import seaborn as sns
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Assuming 'df' is your DataFrame with relevant features for clustering
+# and the 'Churn' variable
+features_for_clustering = df[['TotalCharges', 'MonthlyCharges']]
+
+# Standardize the data
+scaler = StandardScaler()
+features_for_clustering_scaled = scaler.fit_transform(features_for_clustering)
+
+# Choose the number of clusters
+num_clusters = 3
+
+# Apply K-Means clustering
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+df['Cluster'] = kmeans.fit_predict(features_for_clustering_scaled)
+
+# Visualize the clusters
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='TotalCharges', y='MonthlyCharges', hue='Cluster', data=df, palette='viridis')
+plt.title('K-Means Clustering of Customers')
+plt.xlabel('TotalCharges')
+plt.ylabel('MonthlyCharges')
+plt.show()
+
+# Compare clusters with Churn
+plt.figure(figsize=(12, 6))
+sns.countplot(x='Cluster', hue='Churn', data=df, palette='Set2')
+plt.title('Churn Distribution Across Clusters')
+plt.xlabel('Cluster')
+plt.ylabel('Count')
+plt.show()
+
+import pandas as pd
+import seaborn as sns
+from scipy.stats import f_oneway
+
+# Assuming 'df' is your DataFrame
+# You might need to adjust column names based on your actual DataFrame
+
+# Visualize the data
+sns.boxplot(x='Contract', y='MonthlyCharges', data=df)
+plt.title('Boxplot of MonthlyCharges by Contract')
+plt.show()
+
+# Perform ANOVA
+contract_groups = [df['MonthlyCharges'][df['Contract'] == contract] for contract in df['Contract'].unique()]
+f_statistic, p_value = f_oneway(*contract_groups)
+
+print(f'F-Statistic: {f_statistic}')
+print(f'P-value: {p_value}')
+
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+
+# Assuming 'df' is your DataFrame with relevant features for clustering
+features_for_clustering = df[['TotalCharges', 'MonthlyCharges']]
+
+# Standardize the data
+scaler = StandardScaler()
+features_for_clustering_scaled = scaler.fit_transform(features_for_clustering)
+
+# Choose the number of clusters
+num_clusters = 3
+
+# Apply K-Means clustering
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+df['Cluster'] = kmeans.fit_predict(features_for_clustering_scaled)
+
+# Calculate Silhouette Score
+silhouette_avg = silhouette_score(features_for_clustering_scaled, kmeans.labels_)
+
+print(f"Silhouette Score: {silhouette_avg}")
+
+
+import pandas as pd
+
+# Assuming 'df' is your DataFrame
+binary_categorical_columns = ['gender', 'Partner', 'Dependents', 'PhoneService',
+                               'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
+                               'TechSupport', 'StreamingTV', 'StreamingMovies',
+                               'PaperlessBilling', 'Churn']
+
+multi_categorical_columns = ['Contract', 'PaymentMethod', 'InternetService']
+
+# Use pandas get_dummies to create dummy variables for binary variables
+df_encoded_binary = pd.get_dummies(df[binary_categorical_columns], drop_first=True)
+
+# Use pandas get_dummies to create dummy variables for multi-level variables
+df_encoded_multi = pd.get_dummies(df[multi_categorical_columns], drop_first=True)
+
+# Concatenate dummy variables with the original DataFrame
+df_encoded = pd.concat([df, df_encoded_binary, df_encoded_multi], axis=1)
+
+# Drop the original categorical columns
+df_encoded.drop(columns=binary_categorical_columns + multi_categorical_columns, inplace=True)
+
+# Display the resulting DataFrame with dummy variables
+print(df_encoded.head())
+
+
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.model_selection import train_test_split
+
+# Assuming 'df' is your DataFrame with the features and target variable
+# Ensure that the target variable is binary (0 or 1)
+
+# Separate features (X) and target variable (y)
+X = df_encoded.drop(['Churn_Yes', 'Cluster', 'customerID'], axis=1)  # Exclude the target variable
+y = df_encoded['Churn_Yes']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the Gradient Boosting classifier
+gb_classifier = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
+
+# Train the classifier on the training data
+gb_classifier.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred_gb = gb_classifier.predict(X_test)
+
+# Evaluate the model
+accuracy_gb = accuracy_score(y_test, y_pred_gb)
+conf_matrix_gb = confusion_matrix(y_test, y_pred_gb)
+class_report_gb = classification_report(y_test, y_pred_gb)
+
+print(f"Accuracy: {accuracy_gb:.4f}")
+print("\nConfusion Matrix:")
+print(conf_matrix_gb)
+print("\nClassification Report:")
+print(class_report_gb)
+
+
+import matplotlib.pyplot as plt
+
+# Assuming you have already created 'tenure_pivot' DataFrame
+
+# Set the figure size
+fig, ax = plt.subplots(figsize=(15, 8))
+
+# Bar chart for non-churned and churned customers by tenure
+ax.bar(tenure_pivot['tenure'], tenure_pivot['non_churned_customers'], label='Non-Churned')
+ax.bar(tenure_pivot['tenure'], tenure_pivot['churned_customers'], bottom=tenure_pivot['non_churned_customers'], label='Churned')
+
+# Add labels and legend
+ax.set_xlabel('Tenure')
+ax.set_ylabel('Number of Customers')
+ax.set_title('Number of Customers by Tenure and Churn')
+ax.legend()
+
+# Show the plot
+plt.show()
+
+
+
+
+
+
+
